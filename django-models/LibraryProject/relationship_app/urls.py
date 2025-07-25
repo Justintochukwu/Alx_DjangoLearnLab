@@ -22,6 +22,6 @@ urlpatterns = [
     
     # Auth routes
     path('register/', views.register, name='register'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('login/', LoginView.as_view(), template_name='login'),
+    path('logout/', LogoutView.as_view(), template_name='logout'),
 ]
