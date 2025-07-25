@@ -16,7 +16,7 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
     
     
-    from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView, LogoutView

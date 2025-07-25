@@ -10,8 +10,8 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import (
     register_view,
-    CustomLoginView,
-    CustomLogoutView,
+    LoginView,
+    LogoutView,
     list_books,  # your FBV
     LibraryDetailView  # your CBV
 )
@@ -22,6 +22,6 @@ urlpatterns = [
     
     # Auth routes
     path('register/', views.register, name='register'),
-    path('login/', LoginView.as_view(), template_name='login'),
-    path('logout/', LogoutView.as_view(), template_name='logout'),
+    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
 ]
