@@ -66,7 +66,7 @@ def is_librarian(user):
 
 @user_passes_test(is_librarian)
 def librarian_view(request):
-    return render(request, 'librarian_view.html')
+    return render(request, 'relationship_app/librarian_view.html')
 
 
 from django.contrib.auth.decorators import user_passes_test
@@ -77,6 +77,6 @@ def is_member(user):
 
 @user_passes_test(is_member)
 def member_view(request):
-    return render(request, 'member_view.html')
+    return render(request, 'relationship_app/member_view.html')
 
 
