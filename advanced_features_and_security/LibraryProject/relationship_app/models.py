@@ -1,4 +1,4 @@
-from django.conf import settings 
+from django.conf import settings
 from django.db import models
 
 class Author(models.Model):
@@ -39,9 +39,6 @@ class Librarian(models.Model):
     def __str__(self):
         return self.name
 
-
-
-
 class UserProfile(models.Model):
     ROLE_CHOICES = [
         ('Admin', 'Admin'),
@@ -54,6 +51,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
-
+    
     
     

@@ -46,7 +46,7 @@ class CustomLogoutView(LogoutView):
 
 # Role-based views
 def is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+    return hasattr(user, 'userprofile') and user.role == 'Admin'
 
 @user_passes_test(is_admin)
 def admin_view(request):
@@ -54,7 +54,7 @@ def admin_view(request):
 
 
 def is_librarian(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+    return hasattr(user, 'userprofile') and user.role == 'Librarian'
 
 @user_passes_test(is_librarian)
 def librarian_view(request):
@@ -62,7 +62,7 @@ def librarian_view(request):
 
 
 def is_member(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+    return hasattr(user, 'userprofile') and user.role == 'Member'
 
 @user_passes_test(is_member)
 def member_view(request):

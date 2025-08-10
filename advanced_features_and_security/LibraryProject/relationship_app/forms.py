@@ -1,9 +1,9 @@
-# relationship_app/forms.py
-
 from django import forms
-from .models import Book  # or your actual model
+from django.contrib.auth.forms import UserCreationForm
+from bookshelf.models import CustomUser
+from .models import CustomUser
 
-class BookForm(forms.ModelForm):
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
-        model = Book
-        fields = '__all__'
+        model = CustomUser
+        fields = ('username', 'email', 'date_of_birth', 'profile_photo', 'role', 'password1', 'password2')
