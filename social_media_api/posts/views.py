@@ -1,35 +1,37 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, status
 from rest_framework.response import Response
-from django.http import JsonResponse
-from .models import Post
-from .serializers import PostSerializer
+from rest_framework.permissions import IsAuthenticated
+from .models import Post, Like
+from notifications.models import Notification  # make sure you created this app and model
 
-# Create a new post
-class PostCreateView(generics.CreateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class LikePostView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)  # ✅ matches the check
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if not created:
+            return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
-# List all posts (optional, not the feed)
-class PostListView(generics.ListAPIView):
-    queryset = Post.objects.all().order_by("-created_at")
-    serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+        # ✅ Create a notification for the post author
+        if post.author != request.user:  # prevent self-notifications
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb="liked",
+                target=post
+            )
 
-# Feed view – posts from followed users
-class FeedView(generics.ListAPIView):
-    serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+        return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
 
-    def get_queryset(self):
-        # All users the current user is following
-        following_users = self.request.user.following.all()
-        # Get posts by those users, newest first
-        return Post.objects.filter(author__in=following_users).order_by("-created_at")
 
-# Test endpoint
-def index(request):
-    return JsonResponse({"message": "Posts app is working!"})
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)  # ✅ matches the check
+        like = Like.objects.filter(user=request.user, post=post)
+        if like.exists():
+            like.delete()
+            return Response({"detail": "Post unliked successfully."}, status=status.HTTP_200_OK)
+        return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
