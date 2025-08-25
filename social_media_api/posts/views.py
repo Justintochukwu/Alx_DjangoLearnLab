@@ -1,11 +1,10 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from .models import Post, Like
 from notifications.models import Notification  # make sure you created this app and model
 
 class LikePostView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)  # ✅ matches the check
@@ -26,7 +25,7 @@ class LikePostView(generics.GenericAPIView):
 
 
 class UnlikePostView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)  # ✅ matches the check
