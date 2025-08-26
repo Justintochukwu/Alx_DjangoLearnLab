@@ -34,3 +34,14 @@ class UnlikePostView(generics.GenericAPIView):
             like.delete()
             return Response({"detail": "Post unliked successfully."}, status=status.HTTP_200_OK)
         return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ✅ Feed view
+class FeedView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Get users the current user follows
+        following_users = self.request.user.following.all()  
+        # Return posts from followed users, most recent first
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
